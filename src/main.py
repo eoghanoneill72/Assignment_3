@@ -1,3 +1,7 @@
+import urllib.request
+import argparse
+
+
 def set_up(n):
     return[[False]*n for i in range(n)]
 
@@ -21,8 +25,8 @@ def valid_parameters(x1,y1,x2,y2):
     return x1,y1,x2,y2
 
 def toggle(e):
-    e = not e
-    return e
+    return not bool(e)
+    
         
 def turn_on(x1,y1,x2,y2):
     valid_parameters(x1,y1,x2,y2)
@@ -48,19 +52,46 @@ def turn_off(x1,y1,x2,y2):
 def count():
     print(sum([val for val in a if val == True]))
 
-# def create_grid(n):
-#     [[False]*n for j in range(n)]
-#     b = create_grid(n)
-#     return b
-# 
-# def grid(n):
-#     return [[False for i in range(n)] for j in range(n)]
 n = 5
 a = set_up(n)
 
 print(a)
-print(a[1][1])
-toggle(a[1][1])
-print(a[1][1])
+print("before toggle",a[0][1])
+toggle(a[0][1])
+print("after toggle",a[0][1])
 count()
+
+filename = "data/data.txt"
+with open(filename) as f:
+    for line in f.readlines():
+        # process line        
+        values = line.strip().split()
+        if len(values)==1:
+            set_up(int(values[0]))
+        if len(values)==7:
+            x1 = int(values[2])
+            y1 = int(values[3])
+            x2 = int(values[5])
+            y2 = int(values[6])
+            state = values[1]
+            if state == "on":
+                turn_on(x1, y1, x2, y2)
+            elif state == "off":
+                turn_off(x1, y1, x2, y2)
+        if len(values)==6:
+            x1 = int(values[1])
+            y1 = int(values[2])
+            x2 = int(values[5])
+            y2 = int(values[6])
+            if values[0]=="switch":
+                switch(x1, y1, x2, y2)
+            
+parser = argparse.ArgumentParser()
+parser.add_argument('--input', help='input help')
+args = parser.parse_args()
+
+filename = args.input
+
+
+
 
