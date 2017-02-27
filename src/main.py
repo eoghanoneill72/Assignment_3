@@ -7,9 +7,11 @@ from email._header_value_parser import get_invalid_parameter
 class led:
     def __init__(self,size):
         self.size=size
+        
           
-    def set_up(self):
-        return[[False]*self.size for i in range(self.size)]
+    def grid(self):
+        a = [[False]*self.size for i in range(self.size)]
+        return a
     
     def valid_parameters(self,x1,y1,x2,y2):
         if x1 > self.size:
@@ -40,28 +42,28 @@ class led:
         for i in range(min(y1,y2),max(y1,y2)):
             for j in range(min(x1,x2),max(x1,x2)):
                 if a[i][j] == False:
-                    self.toggle(a[i][j])
+                    self.toggle(self.grid[i][j])
             
      
     def switch(self,x1,y1,x2,y2):
         x1,y1,x2,y2 = self.valid_parameters(x1,y1,x2,y2)
         for i in range(min(y1,y2),max(y1,y2)):
             for j in range(min(x1,x2),max(x1,x2)):
-                self.toggle(a[i][j])
+                self.toggle(self.grid()[i][j])
                 
     def turn_off(self,x1,y1,x2,y2):
         x1,y1,x2,y2 = self.valid_parameters(x1,y1,x2,y2)
         for i in range(min(y1,y2),max(y1,y2)):
             for j in range(min(x1,x2),max(x1,x2)):
-                if a[i][j] == True:
-                    self.toggle(a[i][j])
+                if self.grid()[i][j] == True:
+                    self.toggle(self.grid()[i][j])
     
     def count(self):
-        print(sum([val for val in a if val == True]))
+        return(sum([val for val in self.grid() if val == True]))
 
 
 a = led(5)
-c = a.set_up()
+c = a.grid()
 print(c)
 print("before toggle",c[0][1])
 c[0][1] = a.toggle(c[0][1])
@@ -73,7 +75,7 @@ print("after toggle",c[0][1])
 #         # process line        
 #         values = line.strip().split()
 #         if len(values)==1:
-#             led.set_up(int(values[0]))
+#             led.(int(values[0]))
 #         if len(values)==7:
 #             x1 = int(values[2])
 #             y1 = int(values[3])
@@ -99,10 +101,17 @@ print("after toggle",c[0][1])
 # filename = args.input
 
 
-k = led(200)
+# k = led(200)
+# a,b,c,d = 5000,-100,9000,5
+# e,f,g,h = k.valid_parameters(a,b,c,d)
+# 
+# print(e,f,g,h)
 
-a,b,c,d = 5000,-100,9000,5
-e,f,g,h = k.valid_parameters(a,b,c,d)
+lights = led(5)
+lights.grid()
+print(lights.count())
+lights.switch(0,0,1,1)
+print(lights.count())
 
-print(e,f,g,h)
+
 
