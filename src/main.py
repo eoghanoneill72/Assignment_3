@@ -1,14 +1,19 @@
-import urllib.request
+import urllib
 import argparse
 from email._header_value_parser import get_invalid_parameter
-
-
+from fileinput import filename
+import urllib.request
+import os
+import sys
+from src import main
+import re
 
 class led:
     def __init__(self,size):
         self.size=size
-        
-          
+#         self.a = [[False]*self.size for i in range(self.size)]  
+        return
+     
     def grid(self):
         a = [[False]*self.size for i in range(self.size)]
         return a
@@ -60,58 +65,91 @@ class led:
     
     def count(self):
         return(sum([val for val in self.grid() if val == True]))
+    
+    def parse_cmd_str(self):
+        pass
+    
+    def execute(self, cmd_str):
+        cmd,x1,y1,x2,y2 = self.parse_cmd_str(cmd_str)
+        if cmd == "turn on":
+            self.turn_on(x1, y1, x2, y2)
+        elif cmd == "turn on":
+            self.turn_on(x1, y1, x2, y2)
+        elif cmd == "switch":
+            self.turn_on(x1, y1, x2, y2)
+        
+        pass
+        
+filename = "http://claritytrec.ucd.ie/~alawlor/comp30670/input_assign3.txt"
 
+def read_file(filename):
+    if filename.startswith("http"):
+        fh = urllib.request.urlopen(filename)
+        file_str = fh.read().decode()
+        return file_str
+    else:
+        if not os.path.isfile(filename):
+            print("file does not exist")
+        else:
+            file_str = open(filename, "r").read()
+            return file_str
 
-a = led(5)
-c = a.grid()
-print(c)
-print("before toggle",c[0][1])
-c[0][1] = a.toggle(c[0][1])
-print("after toggle",c[0][1])
-
-# filename = "data/data.txt"
-# with open(filename) as f:
-#     for line in f.readlines():
-#         # process line        
-#         values = line.strip().split()
-#         if len(values)==1:
-#             led.(int(values[0]))
-#         if len(values)==7:
-#             x1 = int(values[2])
-#             y1 = int(values[3])
-#             x2 = int(values[5])
-#             y2 = int(values[6])
-#             state = values[1]
+def main():
+    ##buffer is big string of entire file
+    buffer = read_file(filename)
+    ##lines is list of strings
+    lines = buffer.split('\n')
+#     print("lines = ", lines)
+#     print("len(lines) = ", len(lines))
+    ##split string element in list of strings into list of words
+    size = int(lines[0])
+    lights = led(size)
+    for i in lines:
+#     line = re.sub("[^\w]", " ",  lines[i]).split()
+        if 'turn on' in i:
+            arg0, arg1, arg2, arg3, arg4 = i.split(" ")
+            x1,y1 = arg2.split()
+            x2,y2 = arg4.split()
+            lights.turn_off(x1, y1, x2, y2)
+        elif "turn off" in i:
+            arg0, arg1, arg2, arg3, arg4 = i.split(" ")
+            x1,y1 = arg2.split()
+            x2,y2 = arg4.split()
+            lights.turn_off(arg2,arg4)
+        elif "switch" in i:
+            arg0, arg1, arg2, arg3= i.split(" ")
+            x1,y1 = arg2.split()
+            x2,y2 = arg3.split()
+            lights.switch(arg2,arg3)
+            
+    
+    # print("line 2, element 1 = ", lines[1][0])
+    # print("print(lines[1:])",lines[1:])
+    # print("buffer = ", buffer)
+    
+    #########################
+    
+    main.led(int(lines[0]))
+    
+#     for i in line:
+#         if len(line)==7:
+#             x1 = int(line[2])
+#             y1 = int(line[3])
+#             x2 = int(line[5])
+#             y2 = int(line[6])
+#             state = line[1]
 #             if state == "on":
-#                 led.turn_on(x1, y1, x2, y2)
+#                 main.led.turn_on(x1, y1, x2, y2)
 #             elif state == "off":
-#                 led.turn_off(x1, y1, x2, y2)
-#         if len(values)==6:
-#             x1 = int(values[1])
-#             y1 = int(values[2])
-#             x2 = int(values[5])
-#             y2 = int(values[6])
-#             if values[0]=="switch":
-#                 led.switch(x1, y1, x2, y2)
-#             
-# parser = argparse.ArgumentParser()
-# parser.add_argument('--input', help='input help')
-# args = parser.parse_args()
-# 
-# filename = args.input
+#                 main.led.turn_off(x1, y1, x2, y2)
+#         if len(line)==6:
+#             x1 = int(line[1])
+#             y1 = int(line[2])
+#             x2 = int(line[5])
+#             y2 = int(line[6])
+#             if line[0]=="switch":
+#                 main.led.switch(x1, y1, x2, y2)    
 
-
-# k = led(200)
-# a,b,c,d = 5000,-100,9000,5
-# e,f,g,h = k.valid_parameters(a,b,c,d)
-# 
-# print(e,f,g,h)
-
-lights = led(5)
-lights.grid()
-print(lights.count())
-lights.switch(0,0,1,1)
-print(lights.count())
-
-
+    
+    
 
