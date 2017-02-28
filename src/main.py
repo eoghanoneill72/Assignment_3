@@ -1,22 +1,10 @@
-import urllib
-import argparse
-from email._header_value_parser import get_invalid_parameter
-from fileinput import filename
 import urllib.request
 import os
-import sys
-from src import main
-import re
 
 class led:
     def __init__(self,size):
         self.size=size
-#         self.a = [[False]*self.size for i in range(self.size)]  
-        return
-     
-    def grid(self):
-        a = [[False]*self.size for i in range(self.size)]
-        return a
+        self.a = [[False]*self.size for i in range(self.size)]
     
     def valid_parameters(self,x1,y1,x2,y2):
         if x1 > self.size:
@@ -42,44 +30,35 @@ class led:
         
             
     def turn_on(self,x1,y1,x2,y2):
-#         x1 = self.valid_parameter(x1)
         x1,y1,x2,y2 = self.valid_parameters(x1,y1,x2,y2)
         for i in range(min(y1,y2),max(y1,y2)):
             for j in range(min(x1,x2),max(x1,x2)):
-                if a[i][j] == False:
-                    self.toggle(self.grid[i][j])
+                if self.a[i][j] == False:
+                    self.toggle(self.a[i][j])
             
      
     def switch(self,x1,y1,x2,y2):
         x1,y1,x2,y2 = self.valid_parameters(x1,y1,x2,y2)
         for i in range(min(y1,y2),max(y1,y2)):
             for j in range(min(x1,x2),max(x1,x2)):
-                self.toggle(self.grid()[i][j])
+                self.toggle(self.a[i][j])
                 
     def turn_off(self,x1,y1,x2,y2):
         x1,y1,x2,y2 = self.valid_parameters(x1,y1,x2,y2)
         for i in range(min(y1,y2),max(y1,y2)):
             for j in range(min(x1,x2),max(x1,x2)):
-                if self.grid()[i][j] == True:
-                    self.toggle(self.grid()[i][j])
+                if self.a[i][j] == True:
+                    self.toggle(self.a[i][j])
     
     def count(self):
-        return(sum([val for val in self.grid() if val == True]))
-    
-    def parse_cmd_str(self):
-        pass
-    
-    def execute(self, cmd_str):
-        cmd,x1,y1,x2,y2 = self.parse_cmd_str(cmd_str)
-        if cmd == "turn on":
-            self.turn_on(x1, y1, x2, y2)
-        elif cmd == "turn on":
-            self.turn_on(x1, y1, x2, y2)
-        elif cmd == "switch":
-            self.turn_on(x1, y1, x2, y2)
-        
-        pass
-        
+#         return(sum([val for val in self.a() if val == True]))
+        tally=0
+        for i in range(self.size):
+            for j in range(self.size):
+                if self.a[i][j] == True:
+                    tally+=1
+        return tally
+     
 filename = "http://claritytrec.ucd.ie/~alawlor/comp30670/input_assign3.txt"
 
 def read_file(filename):
@@ -99,56 +78,42 @@ def main():
     buffer = read_file(filename)
     ##lines is list of strings
     lines = buffer.split('\n')
-#     print("lines = ", lines)
-#     print("len(lines) = ", len(lines))
-    ##split string element in list of strings into list of words
+    
     size = int(lines[0])
+    
     lights = led(size)
-    for i in lines:
-#     line = re.sub("[^\w]", " ",  lines[i]).split()
-        if 'turn on' in i:
-            arg0, arg1, arg2, arg3, arg4 = i.split(" ")
-            x1,y1 = arg2.split()
-            x2,y2 = arg4.split()
+    
+    for line in lines:
+        if 'turn on' in line:
+            coord1, coord2 = line.split(" ")[2::2]
+            x1,y1 = coord1.split(",")
+            x1,y1 = int(x1),int(y1)
+            x2,y2 = coord2.split(",")
+            x2,y2 = int(x2),int(y2)
             lights.turn_off(x1, y1, x2, y2)
-        elif "turn off" in i:
-            arg0, arg1, arg2, arg3, arg4 = i.split(" ")
-            x1,y1 = arg2.split()
-            x2,y2 = arg4.split()
-            lights.turn_off(arg2,arg4)
-        elif "switch" in i:
-            arg0, arg1, arg2, arg3= i.split(" ")
-            x1,y1 = arg2.split()
-            x2,y2 = arg3.split()
-            lights.switch(arg2,arg3)
-            
+        elif "turn off" in line:
+            coord1, coord2 = line.split(" ")[2::2]
+            x1,y1 = coord1.split(",")
+            x1,y1 = int(x1),int(y1)
+            x2,y2 = coord2.split(",")
+            x2,y2 = int(x2),int(y2)
+            lights.turn_on(x1, y1, x2, y2)
+        elif "switch" in line:
+            coord1, coord2 = line.split(" ")[1::2]
+            x1,y1 = coord1.split(",")
+            x1,y1 = int(x1),int(y1)
+            x2,y2 = coord2.split(",")
+            x2,y2 = int(x2),int(y2)
+            lights.switch(x1, y1, x2, y2)
+        
+    print(lights.count())
+        
+main()
+
+
+
+
     
-    # print("line 2, element 1 = ", lines[1][0])
-    # print("print(lines[1:])",lines[1:])
-    # print("buffer = ", buffer)
-    
-    #########################
-    
-    main.led(int(lines[0]))
-    
-#     for i in line:
-#         if len(line)==7:
-#             x1 = int(line[2])
-#             y1 = int(line[3])
-#             x2 = int(line[5])
-#             y2 = int(line[6])
-#             state = line[1]
-#             if state == "on":
-#                 main.led.turn_on(x1, y1, x2, y2)
-#             elif state == "off":
-#                 main.led.turn_off(x1, y1, x2, y2)
-#         if len(line)==6:
-#             x1 = int(line[1])
-#             y1 = int(line[2])
-#             x2 = int(line[5])
-#             y2 = int(line[6])
-#             if line[0]=="switch":
-#                 main.led.switch(x1, y1, x2, y2)    
 
     
     
