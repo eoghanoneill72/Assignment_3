@@ -10,8 +10,5 @@ setup(name="led_tester",
       packages=['src'],
       entry_points={
         'console_scripts':['led_tester=src.main:main']
-        },
-      install_requires=[
-          'numpy',
-      ],
+        }
       )
