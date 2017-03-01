@@ -1,5 +1,6 @@
 import urllib.request
 import os
+import sys 
 
 class led:
     def __init__(self,size):
@@ -76,7 +77,7 @@ class led:
         print(tally_true)
         return tally_true
      
-filename = "http://claritytrec.ucd.ie/~alawlor/comp30670/input_assign3_b.txt"
+# filename = "http://claritytrec.ucd.ie/~alawlor/comp30670/input_assign3.txt"
 
 def read_file(filename):
     if filename.startswith("http"):
@@ -91,6 +92,7 @@ def read_file(filename):
             return file_str
 
 def main():
+    filename = sys.argv[2]
     ##buffer is big string of entire file
     buffer = read_file(filename)
     ##lines is list of strings
