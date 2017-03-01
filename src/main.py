@@ -32,10 +32,10 @@ class led:
             
     def turn_on(self,x1,y1,x2,y2):
         x1,y1,x2,y2 = self.valid_parameters(x1,y1,x2,y2)
-#         for i in range(min(y1,y2),max(y1,y2)+1):
-#             for j in range(min(x1,x2),max(x1,x2)+1):
-        for i in range(y1,y2+1):
-            for j in range(x1,x2+1):
+        for i in range(min(y1,y2),max(y1,y2)+1):
+            for j in range(min(x1,x2),max(x1,x2)+1):
+#         for i in range(y1,y2+1):
+#             for j in range(x1,x2+1):
                 if self.a[i][j] == False:
                     self.a[i][j]=True
                     #self.toggle(self.a[i][j])
@@ -43,8 +43,10 @@ class led:
      
     def switch(self,x1,y1,x2,y2):
         x1,y1,x2,y2 = self.valid_parameters(x1,y1,x2,y2)
-        for i in range(y1,y2+1):
-            for j in range(x1,x2+1):
+        for i in range(min(y1,y2),max(y1,y2)+1):
+            for j in range(min(x1,x2),max(x1,x2)+1):
+#         for i in range(y1,y2+1):
+#             for j in range(x1,x2+1):
                 if self.a[i][j] == False:
                     self.a[i][j]=True
                 elif self.a[i][j] == True:
@@ -53,15 +55,14 @@ class led:
                 
     def turn_off(self,x1,y1,x2,y2):
         x1,y1,x2,y2 = self.valid_parameters(x1,y1,x2,y2)
-#         for i in range(min(y1,y2),max(y1,y2)+1):
-        for i in range(y1,y2+1):
-            for j in range(x1,x2+1):
+        for i in range(min(y1,y2),max(y1,y2)+1):
+            for j in range(min(x1,x2),max(x1,x2)+1):
+#         for i in range(y1,y2+1):
+#             for j in range(x1,x2+1):
                 if self.a[i][j] == True:
                     self.a[i][j]=False
                     #self.toggle(self.a[i][j])
     def count(self):
-#         return(sum([val for val in self.a() if val == True]))
-#         return np.sum(self.a)
         tally_false,tally_true,tally_other = 0, 0, 0
         for i in range(self.size):
             for j in range(self.size):
@@ -84,7 +85,6 @@ def read_file(filename):
     if filename.startswith("http"):
         fh = urllib.request.urlopen(filename)
         file_str = fh.read().decode('utf-8')
-        print(file_str)
         return file_str
     else:
         if not os.path.isfile(filename):
@@ -103,9 +103,7 @@ def main():
      
     lights = led(size)
      
-    i=0
     for line in lines:
-        i+=1
         if "turn on" in line:
             coord1, coord2 = line.split(" ")[2::2]
             x1,y1 = coord1.split(",")
@@ -128,15 +126,7 @@ def main():
             x2,y2 = int(x2),int(y2)
             lights.switch(x1, y1, x2, y2)
          
-    print(i)
-    print("lights on = ", lights.count(), "(should be 400410)" )
-    
-# def main():
-#     tester = led(10)
-#     print(tester.count())
-#     tester.switch(0, 0, 1, 1)
-#     print(tester.count())
-
+    print("lights on = ", lights.count())
 
 if __name__ == "__main__":    
     main()
