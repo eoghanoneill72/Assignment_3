@@ -7,6 +7,7 @@ class led:
         self.a = [[False]*self.size for i in range(self.size)]
     
     def valid_parameters(self,x1,y1,x2,y2):
+        ## if a coordinate is out of range clamp it
         if x1 > self.size-1:
             x1 = self.size-1
         if x2 > self.size-1:
@@ -77,6 +78,7 @@ def read_file(filename):
     if filename.startswith("http"):
         fh = urllib.request.urlopen(filename)
         file_str = fh.read().decode('utf-8')
+        print(file_str)
         return file_str
     else:
         if not os.path.isfile(filename):
@@ -98,28 +100,35 @@ def main():
     i=0
     for line in lines:
         i+=1
-        if 'turn on' in line:
+        if "turn on" in line:
             coord1, coord2 = line.split(" ")[2::2]
+            print(coord1, coord2)
             x1,y1 = coord1.split(",")
             x1,y1 = int(x1),int(y1)
             x2,y2 = coord2.split(",")
             x2,y2 = int(x2),int(y2)
+            print(x1, y1, x2, y2)
             lights.turn_on(x1, y1, x2, y2)
         elif "turn off" in line:
             coord1, coord2 = line.split(" ")[2::2]
+            print(coord1, coord2)
             x1,y1 = coord1.split(",")
             x1,y1 = int(x1),int(y1)
             x2,y2 = coord2.split(",")
             x2,y2 = int(x2),int(y2)
+            print(x1, y1, x2, y2)
             lights.turn_off(x1, y1, x2, y2)
         elif "switch" in line:
             coord1, coord2 = line.split(" ")[1::2]
+            print(coord1, coord2)
             x1,y1 = coord1.split(",")
             x1,y1 = int(x1),int(y1)
             x2,y2 = coord2.split(",")
             x2,y2 = int(x2),int(y2)
+            print(x1+y1+x2+y2)
             lights.switch(x1, y1, x2, y2)
-    print(i)  
+        
+    print(i)
     print(lights.count())
 
 if __name__ == "__main__":    
