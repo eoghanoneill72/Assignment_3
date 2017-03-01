@@ -32,8 +32,10 @@ class led:
             
     def turn_on(self,x1,y1,x2,y2):
         x1,y1,x2,y2 = self.valid_parameters(x1,y1,x2,y2)
-        for i in range(min(y1,y2),max(y1,y2)+1):
-            for j in range(min(x1,x2),max(x1,x2)+1):
+#         for i in range(min(y1,y2),max(y1,y2)+1):
+#             for j in range(min(x1,x2),max(x1,x2)+1):
+        for i in range(y1,y2+1):
+            for j in range(x1,x2+1):
                 if self.a[i][j] == False:
                     self.a[i][j]=True
                     #self.toggle(self.a[i][j])
@@ -41,18 +43,19 @@ class led:
      
     def switch(self,x1,y1,x2,y2):
         x1,y1,x2,y2 = self.valid_parameters(x1,y1,x2,y2)
-        for i in range(min(y1,y2),max(y1,y2)+1):
-            for j in range(min(x1,x2),max(x1,x2)+1):
+        for i in range(y1,y2+1):
+            for j in range(x1,x2+1):
                 if self.a[i][j] == False:
                     self.a[i][j]=True
-                if self.a[i][j] == True:
+                elif self.a[i][j] == True:
                     self.a[i][j]=False
                 #self.toggle(self.a[i][j])
                 
     def turn_off(self,x1,y1,x2,y2):
         x1,y1,x2,y2 = self.valid_parameters(x1,y1,x2,y2)
-        for i in range(min(y1,y2),max(y1,y2)+1):
-            for j in range(min(x1,x2),max(x1,x2)+1):
+#         for i in range(min(y1,y2),max(y1,y2)+1):
+        for i in range(y1,y2+1):
+            for j in range(x1,x2+1):
                 if self.a[i][j] == True:
                     self.a[i][j]=False
                     #self.toggle(self.a[i][j])
@@ -69,8 +72,11 @@ class led:
                 else:
                     tally_other
                     
-        print(self.size)
-        return tally_true, tally_false, tally_other
+#         print("self.size = ",self.size)
+#         print("tally_true, tally_false, tally_other")
+#         print(tally_true, tally_false, tally_other)
+#         print("tally_true + tally_false == self.size**2 =", tally_true + tally_false == self.size**2)
+        return tally_true
      
 filename = "http://claritytrec.ucd.ie/~alawlor/comp30670/input_assign3.txt"
 
@@ -92,44 +98,45 @@ def main():
     buffer = read_file(filename)
     ##lines is list of strings
     lines = buffer.split('\n')
-    
+     
     size = int(lines[0])
-    
+     
     lights = led(size)
-    
+     
     i=0
     for line in lines:
         i+=1
         if "turn on" in line:
             coord1, coord2 = line.split(" ")[2::2]
-            print(coord1, coord2)
             x1,y1 = coord1.split(",")
             x1,y1 = int(x1),int(y1)
             x2,y2 = coord2.split(",")
             x2,y2 = int(x2),int(y2)
-            print(x1, y1, x2, y2)
             lights.turn_on(x1, y1, x2, y2)
         elif "turn off" in line:
             coord1, coord2 = line.split(" ")[2::2]
-            print(coord1, coord2)
             x1,y1 = coord1.split(",")
             x1,y1 = int(x1),int(y1)
             x2,y2 = coord2.split(",")
             x2,y2 = int(x2),int(y2)
-            print(x1, y1, x2, y2)
             lights.turn_off(x1, y1, x2, y2)
         elif "switch" in line:
             coord1, coord2 = line.split(" ")[1::2]
-            print(coord1, coord2)
             x1,y1 = coord1.split(",")
             x1,y1 = int(x1),int(y1)
             x2,y2 = coord2.split(",")
             x2,y2 = int(x2),int(y2)
-            print(x1+y1+x2+y2)
             lights.switch(x1, y1, x2, y2)
-        
+         
     print(i)
-    print(lights.count())
+    print("lights on = ", lights.count(), "(should be 400410)" )
+    
+# def main():
+#     tester = led(10)
+#     print(tester.count())
+#     tester.switch(0, 0, 1, 1)
+#     print(tester.count())
+
 
 if __name__ == "__main__":    
     main()
