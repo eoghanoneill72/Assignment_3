@@ -25,11 +25,7 @@ class led:
         if y2 < 0:
             y2 = 0
         return x1,y1,x2,y2
-    
-    def toggle(self,e):
-        return not e
-        
-            
+          
     def turn_on(self,x1,y1,x2,y2):
         x1,y1,x2,y2 = self.valid_parameters(x1,y1,x2,y2)
         for i in range(min(y1,y2),max(y1,y2)+1):
@@ -77,9 +73,10 @@ class led:
 #         print("tally_true, tally_false, tally_other")
 #         print(tally_true, tally_false, tally_other)
 #         print("tally_true + tally_false == self.size**2 =", tally_true + tally_false == self.size**2)
+        print(tally_true)
         return tally_true
      
-filename = "http://claritytrec.ucd.ie/~alawlor/comp30670/input_assign3.txt"
+filename = "http://claritytrec.ucd.ie/~alawlor/comp30670/input_assign3_b.txt"
 
 def read_file(filename):
     if filename.startswith("http"):
@@ -104,6 +101,9 @@ def main():
     lights = led(size)
      
     for line in lines:
+        line = line.lstrip()
+        line = line.replace(" ,",",")
+        line = line.replace(", ",",")
         if "turn on" in line:
             coord1, coord2 = line.split(" ")[2::2]
             x1,y1 = coord1.split(",")
@@ -125,8 +125,16 @@ def main():
             x2,y2 = coord2.split(",")
             x2,y2 = int(x2),int(y2)
             lights.switch(x1, y1, x2, y2)
+        else:
+            pass
          
-    print("lights on = ", lights.count())
+    lights.count()
 
 if __name__ == "__main__":    
     main()
+    
+# 3 - 400410
+# 3a - 6
+# 3b - 29942250
+# 3c - 477452
+# 3d - 349037
